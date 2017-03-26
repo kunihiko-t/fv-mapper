@@ -10,7 +10,7 @@ go get github.com/kunihiko-t/fv-mapper
 
 ### Usage
 
-```
+```golang
 package main
 
 import (
@@ -28,7 +28,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
   //Params: {"name_1": "foo", "name_2": "bar", "another":"buzz"}
 
   //Fetch All params
-	m := fv.GetMap(r)
+  m := fv.GetMap(r)
   //Result: map[name_1:foo name_2:bar another:buzz]
 
   //For sequential params
