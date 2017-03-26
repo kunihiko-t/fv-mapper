@@ -24,6 +24,7 @@ import (
 	"github.com/serenize/snaker"
 	"net/http"
 	"regexp"
+	"unicode"
 )
 
 func GetMap(r *http.Request) map[string]string {
@@ -56,12 +57,19 @@ func getMap(r *http.Request) map[string]string {
 	return m
 }
 
-func GetCamelMap(r *http.Request) map[string]string {
+func GetCamelMap(capitalStart bool, r *http.Request) map[string]string {
 	m := getMap(r)
 	for key, _ := range r.Form {
 		v := m[key]
 		delete(m, key)
-		m[snaker.SnakeToCamel(key)] = v
+		k := snaker.SnakeToCamel(key)
+		b := []byte(k)
+		if capitalStart {
+			b[0] = byte(unicode.ToUpper(rune(k[0])))
+		} else {
+			b[0] = byte(unicode.ToLower(rune(k[0])))
+		}
+		m[string(b)] = v
 	}
 	return m
 }

@@ -59,48 +59,70 @@ func (h *TestSequentialHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 
 	if m["name_1"] != "test_1" {
 		e := fmt.Sprintf("Caught %v expected : test_1", m["name_1"])
-		errsSeq = append(errs, errors.New(e))
+		errsSeq = append(errsSeq, errors.New(e))
 	}
 
 	if m["name_2"] != "test_2" {
 		e := fmt.Sprintf("Caught %v expected : test_2", m["name_2"])
-		errsSeq = append(errs, errors.New(e))
+		errsSeq = append(errsSeq, errors.New(e))
 	}
 
 	if m["name_3"] != "test_3" {
 		e := fmt.Sprintf("Caught %v expected : test_3", m["name_3"])
-		errsSeq = append(errs, errors.New(e))
+		errsSeq = append(errsSeq, errors.New(e))
 	}
 
 	if m["another_name_1"] != "" {
 		e := fmt.Sprintf("Caught %v expected : blank", m["another_name_1"])
-		errsSeq = append(errs, errors.New(e))
+		errsSeq = append(errsSeq, errors.New(e))
 	}
 
 }
 
 func (h *TestCamelHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	m := GetCamelMap(r)
+	m := GetCamelMap(false, r)
 
 	if m["nameTest"] != "foo" {
 		e := fmt.Sprintf("Caught %v expected : foo", m["nameTest"])
-		errs = append(errs, errors.New(e))
+		errsCamel = append(errsCamel, errors.New(e))
 	}
 
 	if m["name_test"] != "" {
 		e := fmt.Sprintf("Caught %v expected : blank", m["name_test"])
-		errs = append(errs, errors.New(e))
+		errsCamel = append(errsCamel, errors.New(e))
 	}
 
 	if m["nameA"] != "bar" {
 		e := fmt.Sprintf("Caught %v expected : bar", m["nameA"])
-		errs = append(errs, errors.New(e))
+		errsCamel = append(errsCamel, errors.New(e))
 	}
 
 	if m["name_a"] != "" {
 		e := fmt.Sprintf("Caught %v expected : blank", m["name_a"])
-		errs = append(errs, errors.New(e))
+		errsCamel = append(errsCamel, errors.New(e))
+	}
+
+	m = GetCamelMap(true, r)
+
+	if m["NameTest"] != "foo" {
+		e := fmt.Sprintf("Caught %v expected : foo", m["nameTest"])
+		errsCamel = append(errsCamel, errors.New(e))
+	}
+
+	if m["name_test"] != "" {
+		e := fmt.Sprintf("Caught %v expected : blank", m["name_test"])
+		errsCamel = append(errsCamel, errors.New(e))
+	}
+
+	if m["NameA"] != "bar" {
+		e := fmt.Sprintf("Caught %v expected : bar", m["nameA"])
+		errsCamel = append(errsCamel, errors.New(e))
+	}
+
+	if m["name_a"] != "" {
+		e := fmt.Sprintf("Caught %v expected : blank", m["name_a"])
+		errsCamel = append(errsCamel, errors.New(e))
 	}
 
 }
@@ -111,22 +133,22 @@ func (h *TestSnakeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if m["name_test"] != "foo" {
 		e := fmt.Sprintf("Caught %v expected : foo", m["name_test"])
-		errs = append(errs, errors.New(e))
+		errsSnake = append(errsSnake, errors.New(e))
 	}
 
-	if m["nameTest"] == "" {
+	if m["nameTest"] != "" {
 		e := fmt.Sprintf("Caught %v expected : blank", m["nameTest"])
-		errs = append(errs, errors.New(e))
+		errsSnake = append(errsSnake, errors.New(e))
 	}
 
 	if m["name_a"] != "bar" {
 		e := fmt.Sprintf("Caught %v expected : bar", m["name_a"])
-		errs = append(errs, errors.New(e))
+		errsSnake = append(errsSnake, errors.New(e))
 	}
 
-	if m["nameA"] == "" {
+	if m["nameA"] != "" {
 		e := fmt.Sprintf("Caught %v expected : blank", m["nameA"])
-		errs = append(errs, errors.New(e))
+		errsSnake = append(errsSnake, errors.New(e))
 	}
 
 }
@@ -225,9 +247,9 @@ func TestGetCamelMap(t *testing.T) {
 	}
 
 	//GET
-	errsSeq = []error{}
+	errsCamel = []error{}
 	_, _, err = request.Get(ts.URL).
-		Send(`{ "name_test": "foo","nameA": "bar" }`).
+		Query(`{ "name_test": "foo","nameA": "bar" }`).
 		End()
 	if err != nil {
 		t.Error("unexpected error:", err)
@@ -261,9 +283,9 @@ func TestGetSnakeMap(t *testing.T) {
 	}
 
 	//GET
-	errsSeq = []error{}
+	errsSnake = []error{}
 	_, _, err = request.Get(ts.URL).
-		Send(`{ "name_test": "foo","nameA": "bar" }`).
+		Query(`{ "name_test": "foo","nameA": "bar" }`).
 		End()
 	if err != nil {
 		t.Error("unexpected error:", err)
