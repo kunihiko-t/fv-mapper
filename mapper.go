@@ -63,13 +63,13 @@ func GetCamelMap(capitalStart bool, r *http.Request) map[string]string {
 		v := m[key]
 		delete(m, key)
 		k := snaker.SnakeToCamel(key)
-		b := []byte(k)
+		rk := []rune(k)
 		if capitalStart {
-			b[0] = byte(unicode.ToUpper(rune(k[0])))
+			rk[0] = unicode.ToUpper(rk[0])
 		} else {
-			b[0] = byte(unicode.ToLower(rune(k[0])))
+			rk[0] = unicode.ToLower(rk[0])
 		}
-		m[string(b)] = v
+		m[string(rk)] = v
 	}
 	return m
 }

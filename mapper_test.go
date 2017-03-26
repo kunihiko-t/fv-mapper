@@ -125,6 +125,11 @@ func (h *TestCamelHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		errsCamel = append(errsCamel, errors.New(e))
 	}
 
+	if m["あいう"] != "え" {
+		e := fmt.Sprintf("Caught %v expected : え", m["あいう"])
+		errsCamel = append(errsCamel, errors.New(e))
+	}
+
 }
 
 func (h *TestSnakeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -235,7 +240,7 @@ func TestGetCamelMap(t *testing.T) {
 
 	//POST
 	_, _, err := request.Post(ts.URL).Type("form").
-		Send(`{ "name_test": "foo","nameA": "bar" }`).
+		Send(`{ "name_test": "foo","nameA": "bar","あ_い_う": "え" }`).
 		End()
 
 	if err != nil {
@@ -249,7 +254,7 @@ func TestGetCamelMap(t *testing.T) {
 	//GET
 	errsCamel = []error{}
 	_, _, err = request.Get(ts.URL).
-		Query(`{ "name_test": "foo","nameA": "bar" }`).
+		Query(`{ "name_test": "foo","nameA": "bar","あ_い_う": "え" }`).
 		End()
 	if err != nil {
 		t.Error("unexpected error:", err)
