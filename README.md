@@ -39,7 +39,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
   //Params: { "name_test": "foo","nameA": "bar" }
 
   //With camel key
-  camel := fv.GetCamelMap(r)
+  camel := fv.GetCamelMap(false,r)
   //Result: map[nameTest:foo nameA:bar]
 
   //With snake key
