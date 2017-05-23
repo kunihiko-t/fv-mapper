@@ -77,6 +77,7 @@ func GetCamelMap(capitalStart bool, r *http.Request) map[string]string {
 	return m
 }
 
+//GetSnakeMap is a function to fetch all params with snake case.
 func GetSnakeMap(r *http.Request) map[string]string {
 	m := getMap(r)
 	for key, _ := range r.Form {
