@@ -28,22 +28,22 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
   //Params: {"name_1": "foo", "name_2": "bar", "another":"buzz"}
 
   //Fetch All params
-  m := fv.GetMap(r)
+  m := fvm.GetMap(r)
   //Result: map[name_1:foo name_2:bar another:buzz]
 
   //For sequential params
-  ms := fv.GetMapSequential("name",r)
+  ms := fvm.GetMapSequential("name",r)
   //Result: map[name_1:foo name_2:bar]
 
 
   //Params: { "name_test": "foo","nameA": "bar" }
 
   //With camel key
-  camel := fv.GetCamelMap(false,r)
+  camel := fvm.GetCamelMap(false,r)
   //Result: map[nameTest:foo nameA:bar]
 
   //With snake key
-  snake := fv.GetSnakeMap(r)
+  snake := fvm.GetSnakeMap(r)
   //Result: map[name_test:foo name_a:bar]
 
 }
