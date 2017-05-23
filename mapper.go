@@ -76,3 +76,13 @@ func GetCamelMap(capitalStart bool, r *http.Request) map[string]string {
 	}
 	return m
 }
+
+func GetSnakeMap(r *http.Request) map[string]string {
+	m := getMap(r)
+	for key, _ := range r.Form {
+		v := m[key]
+		delete(m, key)
+		m[snaker.CamelToSnake(key)] = v
+	}
+	return m
+}
