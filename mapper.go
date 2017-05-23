@@ -27,10 +27,12 @@ import (
 	"unicode"
 )
 
+//GetMap is a function to fetch all params.
 func GetMap(r *http.Request) map[string]string {
 	return getMap(r)
 }
 
+//GetMapSequential is a function to fetch values from sequential map value with given base variable name.
 func GetMapSequential(name string, r *http.Request) map[string]string {
 	m := getMap(r)
 	s := fmt.Sprintf(`(^%v_[\d]+$)|(^[\d]+_%v$)`, name, name)
@@ -57,6 +59,7 @@ func getMap(r *http.Request) map[string]string {
 	return m
 }
 
+//GetCamelMap is a function to fetch all params with camel case.
 func GetCamelMap(capitalStart bool, r *http.Request) map[string]string {
 	m := getMap(r)
 	for key, _ := range r.Form {
@@ -70,16 +73,6 @@ func GetCamelMap(capitalStart bool, r *http.Request) map[string]string {
 			rk[0] = unicode.ToLower(rk[0])
 		}
 		m[string(rk)] = v
-	}
-	return m
-}
-
-func GetSnakeMap(r *http.Request) map[string]string {
-	m := getMap(r)
-	for key, _ := range r.Form {
-		v := m[key]
-		delete(m, key)
-		m[snaker.CamelToSnake(key)] = v
 	}
 	return m
 }
